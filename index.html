@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-accent="blue">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CelularHub · Compara iPhone, Galaxy y Redmi</title>
+  <meta name="description" content="Comparador de tres celulares muy conocidos: precio, materiales, batería, cámara, pros y contras, con links de compra." />
+
+  <!-- Aplica el tema guardado antes de pintar la página (evita el parpadeo) -->
+  <script>
+    (function () {
+      try {
+        var r = document.documentElement;
+        var theme = localStorage.getItem("theme");
+        var accent = localStorage.getItem("accent");
+        if (!theme) theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        r.setAttribute("data-theme", theme);
+        if (accent) r.setAttribute("data-accent", accent);
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ============================================================
+   CelularHub · estilos
+   Toda la página se tiñe a partir de --accent: al cambiar el color
+   (Océano, Atardecer, Bosque, Uva) cambian fondo, superficies y bordes.
+   ============================================================ */
+
+:root {
+  --accent: #1f5eff;
+  --on-accent: #ffffff;
+
+  --ink: color-mix(in srgb, var(--accent) 14%, #0a0f1a);
+  --bg: color-mix(in srgb, var(--accent) 8%, #ffffff);
+  --surface: color-mix(in srgb, var(--accent) 2.5%, #ffffff);
+  --tint: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  --muted: color-mix(in srgb, var(--ink) 66%, var(--bg));
+  --line: color-mix(in srgb, var(--ink) 13%, var(--bg));
+
+  --good: #0f7a45;
+  --good-bg: color-mix(in srgb, #16a34a 15%, var(--surface));
+  --bad: #b42318;
+  --bad-bg: color-mix(in srgb, #ef4444 11%, var(--surface));
+
+  --shadow: 0 18px 40px -18px color-mix(in srgb, var(--accent) 45%, transparent);
+  --font-head: "Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Colores de la página (modo claro) */
+[data-accent="blue"]   { --accent: #1f5eff; }
+[data-accent="orange"] { --accent: #d9480f; }
+[data-accent="green"]  { --accent: #0b7a43; }
+[data-accent="violet"] { --accent: #6d28d9; }
+
+/* Modo oscuro: las superficies se oscurecen pero conservan el tinte del color elegido */
+[data-theme="dark"] {
+  --on-accent: #0a0f1a;
+  --ink: color-mix(in srgb, var(--accent) 8%, #f4f6fb);
+  --bg: color-mix(in srgb, var(--accent) 16%, #070a11);
+  --surface: color-mix(in srgb, var(--accent) 20%, #0d1220);
+  --tint: color-mix(in srgb, var(--accent) 24%, var(--bg));
+  --muted: color-mix(in srgb, var(--ink) 62%, var(--bg));
+  --line: color-mix(in srgb, var(--ink) 16%, var(--bg));
+  --good: #4ade80;
+  --bad: #fca5a5;
+  --good-bg: color-mix(in srgb, #22c55e 18%, var(--surface));
+  --bad-bg: color-mix(in srgb, #ef4444 16%, var(--surface));
+  --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.75);
+}
+[data-theme="dark"][data-accent="blue"]   { --accent: #6b97ff; }
+[data-theme="dark"][data-accent="orange"] { --accent: #ff8a5b; }
+[data-theme="dark"][data-accent="green"]  { --accent: #3ddc84; }
+[data-theme="dark"][data-accent="violet"] { --accent: #a78bfa; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  transition: background-color .3s, color .3s;
+}
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.1; margin: 0; letter-spacing: -0.015em; }
+p { margin: 0; }
+a { color: inherit; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; z-index: 100; }
+.skip:focus { left: 8px; }
+
+/* ---------- Barra superior ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner { display: flex; align-items: center; gap: 28px; min-height: 68px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 1.3rem; text-decoration: none; letter-spacing: -0.02em; }
+.logo-mark {
+  width: 22px; height: 30px; border-radius: 7px; position: relative;
+  background: linear-gradient(160deg, var(--accent), color-mix(in srgb, var(--accent) 50%, #000));
+}
+.logo-mark::after { content: ""; position: absolute; top: 4px; left: 4px; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.7); }
+.nav { display: flex; gap: 22px; flex: 1; }
+.nav a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: .95rem; padding: 4px 0; border-bottom: 2px solid transparent; }
+.nav a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+.tools { display: flex; align-items: center; gap: 10px; }
+
+.swatches { display: flex; gap: 6px; padding: 5px; border-radius: 999px; background: var(--tint); }
+.swatch { width: 22px; height: 22px; border-radius: 50%; border: 0; cursor: pointer; padding: 0; transition: transform .15s; box-shadow: inset 0 0 0 2px rgba(255,255,255,.55); }
+.swatch[data-accent="blue"]   { background: #1f5eff; }
+.swatch[data-accent="orange"] { background: #d9480f; }
+.swatch[data-accent="green"]  { background: #0b7a43; }
+.swatch[data-accent="violet"] { background: #6d28d9; }
+.swatch:hover { transform: scale(1.15); }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); }
+
+.icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: background-color .15s; }
+.icon-btn:hover { background: var(--tint); }
+
+/* ---------- Botones ---------- */
+.btn { border: 0; border-radius: 999px; padding: 10px 20px; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s, background-color .15s, box-shadow .15s; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
+.btn-ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 30%, transparent); }
+.btn-ghost:hover { background: var(--tint); }
+.btn-sm { padding: 8px 16px; font-size: .9rem; }
+.btn-lg { padding: 14px 26px; font-size: 1.02rem; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.count { background: var(--on-accent); color: var(--accent); border-radius: 999px; min-width: 22px; padding: 0 7px; font-size: .8rem; line-height: 22px; text-align: center; }
+
+/* ---------- Celulares (SVG con giro 3D) ---------- */
+.phone {
+  --w: 120px;
+  position: relative; flex: none;
+  width: var(--w); aspect-ratio: 200 / 410;
+  perspective: 1000px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.phone::after {
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: -3%; height: 6%;
+  border-radius: 50%; background: rgba(0, 0, 0, .38); filter: blur(10px); z-index: -1;
+}
+.ph-inner {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(calc(var(--ry, 0deg) + var(--flip, 0deg)));
+  transition: transform .9s cubic-bezier(.3, 1.35, .5, 1);
+}
+.phone.flipped { --flip: 180deg; }
+.tilting .ph-inner, .moving .ph-inner { transition: transform .12s linear; }
+.phone.flipping .ph-inner { transition: transform .9s cubic-bezier(.3, 1.35, .5, 1); }
+.ph-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.ph-face svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ph-back { transform: rotateY(180deg); }
+.phone.photo { aspect-ratio: auto; cursor: default; }
+.phone.photo img {
+  display: block; width: 100%; height: auto;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .4s; filter: drop-shadow(0 18px 20px rgba(0, 0, 0, .3));
+}
+.flip-hint {
+  position: absolute; top: 12px; right: 12px;
+  font-size: .78rem; font-weight: 600; background: rgba(0, 0, 0, .5); color: #fff;
+  padding: 3px 12px; border-radius: 999px; pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.tilt:hover .flip-hint, .tilt:focus-within .flip-hint { opacity: 1; }
+@media (hover: none) { .flip-hint { opacity: .85; } }
+
+/* ---------- Portada ---------- */
+.hero { padding: 56px 0 40px; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: clamp(2.6rem, 5.6vw, 4.4rem); font-weight: 700; letter-spacing: -0.03em; }
+.lead { font-size: 1.15rem; color: var(--muted); margin: 20px 0 30px; max-width: 34ch; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.status { margin-top: 26px; font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.status.ok::before { background: var(--good); }
+.status.off::before { background: #d97706; }
+
+.stage {
+  background: var(--accent);
+  border-radius: 40px;
+  padding: 44px 20px 26px;
+  display: flex; justify-content: center; align-items: flex-end;
+  min-height: 440px;
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.stage::before { content: ""; position: absolute; width: 520px; height: 520px; border-radius: 50%; right: -160px; top: -200px; background: rgba(255,255,255,.12); }
+.hero-phones { display: flex; align-items: flex-end; justify-content: center; gap: 6px; position: relative; }
+.hp { margin: 0; width: 126px; display: flex; flex-direction: column; align-items: center; gap: 16px; color: var(--on-accent); text-align: center; }
+.hp figcaption { display: grid; line-height: 1.3; }
+.hp figcaption strong { font-family: var(--font-head); font-size: 1.02rem; }
+.hp figcaption span { font-size: .88rem; opacity: .85; }
+.hp0 { transform: rotate(-6deg) translate(calc(var(--mx, 0) * -12px), calc(var(--my, 0) * -8px)); }
+.hp1 { z-index: 1; width: 156px; transform: translate(calc(var(--mx, 0) * -6px), calc(var(--my, 0) * -4px)); }
+.hp2 { transform: rotate(6deg) translate(calc(var(--mx, 0) * -12px), calc(var(--my, 0) * -8px)); }
+.hp0 .phone, .hp2 .phone { --w: 118px; }
+.hp1 .phone { --w: 148px; }
+
+/* El único momento animado de la página: los celulares suben al cargar */
+.hero-phones.intro .hp { animation: rise .9s cubic-bezier(.2, .8, .2, 1) both; }
+.hero-phones.intro .hp1 { animation-delay: .05s; }
+.hero-phones.intro .hp0 { animation-delay: .2s; }
+.hero-phones.intro .hp2 { animation-delay: .35s; }
+@keyframes rise { from { opacity: 0; translate: 0 70px; } to { opacity: 1; translate: 0 0; } }
+
+/* ---------- Secciones ---------- */
+.section { padding: 64px 24px; }
+.section-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 30px; }
+.section-head h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+.section-head p { margin-top: 8px; max-width: 58ch; }
+
+/* ---------- Catálogo ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: stretch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: transform .2s, box-shadow .2s; }
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.card.top { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.ribbon { position: absolute; top: 14px; left: 14px; z-index: 2; background: var(--accent); color: var(--on-accent); font-size: .8rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; }
+.card-visual { height: 250px; display: grid; place-items: center; background: color-mix(in srgb, var(--pc) 20%, var(--surface)); }
+.card-visual .phone { --w: 104px; }
+.card-body { padding: 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.brand { font-size: .9rem; color: var(--muted); font-weight: 600; }
+.card-body h3 { font-size: 1.5rem; }
+.tagline { color: var(--muted); font-size: .95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: var(--tint); border-radius: 999px; padding: 3px 11px; font-size: .8rem; font-weight: 500; }
+.price-row { display: flex; align-items: baseline; justify-content: space-between; margin-top: auto; padding-top: 12px; }
+.price { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+.stars { font-weight: 600; font-size: .92rem; }
+.stock { font-size: .85rem; }
+.stock.low { color: #b45309; font-weight: 600; }
+.stock.out { color: var(--bad); font-weight: 600; }
+.card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+.buy-links { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 4px; font-size: .9rem; }
+.buy-link { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.buy-link:hover { text-decoration-thickness: 3px; }
+
+/* ---------- Fichas con pros y contras ---------- */
+.detail { display: grid; grid-template-columns: 300px 1fr; gap: 48px; padding: 44px 0; border-top: 1px solid var(--line); align-items: start; }
+.detail:first-child { border-top: 0; padding-top: 0; }
+.detail:nth-child(even) { grid-template-columns: 1fr 300px; }
+.detail:nth-child(even) .detail-visual { order: 2; }
+.detail-visual { background: color-mix(in srgb, var(--pc) 22%, var(--surface)); border-radius: 32px; padding: 40px 20px; display: grid; place-items: center; }
+.detail-visual .phone { --w: 150px; }
+.detail-main h3 { font-size: clamp(1.7rem, 3vw, 2.3rem); margin: 4px 0 8px; }
+.detail-main > p { color: var(--muted); max-width: 62ch; }
+.spec-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 24px; margin: 24px 0; }
+.spec-list div { display: grid; align-content: start; }
+.spec-list dt { font-size: .82rem; color: var(--muted); }
+.spec-list dd { margin: 0; font-weight: 600; }
+.proscons { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 8px; }
+.pros, .cons { padding: 4px 28px 4px 0; }
+.cons { padding: 4px 0 4px 28px; border-left: 2px solid var(--line); }
+.proscons h4 { font-size: 1.15rem; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.proscons h4::before { content: ""; width: 12px; height: 12px; border-radius: 50%; }
+.pros h4::before { background: var(--good); }
+.cons h4::before { background: var(--bad); }
+.proscons ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.proscons li { position: relative; padding-left: 28px; font-size: .96rem; }
+.proscons li::before { position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: .72rem; font-weight: 700; line-height: 20px; text-align: center; }
+.pros li::before { content: "✓"; background: var(--good-bg); color: var(--good); }
+.cons li::before { content: "✕"; background: var(--bad-bg); color: var(--bad); }
+.detail-buy { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.detail-buy > span { font-weight: 600; margin-right: 4px; }
+
+/* ---------- Comparador ---------- */
+.priority { display: grid; gap: 6px; font-size: .9rem; font-weight: 600; }
+.priority select, .key-field input, .admin-table input {
+  font: inherit; color: var(--ink); background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 9px 12px;
+}
+.priority select { min-width: 240px; font-weight: 500; }
+.verdict { background: var(--accent); color: var(--on-accent); border-radius: 22px; padding: 20px 26px; margin-bottom: 18px; font-size: 1.1rem; font-weight: 500; box-shadow: var(--shadow); }
+.verdict strong { font-family: var(--font-head); font-size: 1.3rem; }
+.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; }
+.compare { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 760px; }
+.compare th, .compare td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.compare thead th { font-family: var(--font-head); font-size: 1.1rem; background: var(--tint); }
+.compare thead th small { display: block; font-family: var(--font-body); font-weight: 500; font-size: .82rem; color: var(--muted); }
+.compare tbody th { font-weight: 600; color: var(--muted); width: 210px; font-size: .92rem; position: sticky; left: 0; background: var(--surface); }
+.compare thead th:first-child { position: sticky; left: 0; }
+.compare tr:last-child th, .compare tr:last-child td { border-bottom: 0; }
+.compare td.best { background: var(--good-bg); color: var(--good); font-weight: 700; }
+.compare td.best .mini-bar > span { background: var(--good); }
+.mini-bar { display: block; height: 5px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 11%, transparent); margin-top: 8px; overflow: hidden; }
+.mini-bar > span { display: block; height: 100%; border-radius: 999px; background: var(--accent); transition: width .5s; }
+.compare tr.score th, .compare tr.score td { background: var(--tint); }
+.compare tr.score td.best { background: var(--good-bg); }
+.score-num { font-family: var(--font-head); font-size: 1.9rem; font-weight: 700; line-height: 1; }
+.score-num small { font-size: .9rem; font-weight: 500; color: var(--muted); }
+
+/* ---------- Método ---------- */
+.method { display: grid; gap: 10px; max-width: 760px; }
+.method details { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 4px 20px; }
+.method summary { cursor: pointer; font-weight: 600; padding: 14px 0; }
+.method details p { padding: 0 0 16px; color: var(--muted); max-width: 66ch; }
+
+.footer { padding: 36px 0 44px; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
+
+/* ---------- Carrito y panel admin ---------- */
+.overlay { position: fixed; inset: 0; background: color-mix(in srgb, var(--ink) 50%, transparent); z-index: 30; display: none; }
+.overlay.open { display: block; }
+.drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(420px, 100%); background: var(--surface); color: var(--ink); z-index: 40; transform: translateX(100%); transition: transform .25s; display: flex; flex-direction: column; box-shadow: -14px 0 40px rgba(0,0,0,.25); visibility: hidden; }
+.drawer.open { transform: translateX(0); visibility: visible; }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+.drawer-head h3 { font-size: 1.3rem; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 8px 22px; }
+.drawer-foot { padding: 18px 22px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.total { display: flex; justify-content: space-between; font-size: 1.15rem; }
+.cart-line { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.cart-thumb { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(155deg, var(--pc), color-mix(in srgb, var(--pc) 50%, #000)); }
+.qty { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.qty button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+
+.modal { position: fixed; inset: 0; z-index: 40; display: none; place-items: center; padding: 16px; }
+.modal.open { display: grid; }
+.modal-card { background: var(--surface); color: var(--ink); border-radius: 26px; width: min(960px, 100%); max-height: 90vh; overflow: auto; }
+.modal-body { padding: 18px 22px 24px; display: grid; gap: 16px; }
+.key-field { display: grid; gap: 6px; font-size: .9rem; font-weight: 600; max-width: 340px; }
+.admin-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+.admin-table th, .admin-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--line); font-size: .9rem; }
+.admin-table input { width: 100%; max-width: 120px; padding: 7px 9px; }
+
+.toast { position: fixed; bottom: 26px; left: 50%; transform: translate(-50%, 30px); background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 60; font-weight: 500; max-width: calc(100% - 32px); text-align: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+
+/* ============================================================
+   Animaciones
+   ============================================================ */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform-origin: left; transform: scaleX(0); z-index: 50; }
+.nav a.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* Portada: entrada del texto, una sola vez al cargar */
+.hero h1 .ln { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+.hero h1 .ln > span { display: block; animation: lineUp .9s cubic-bezier(.2, .8, .2, 1) both; }
+.hero h1 .ln:nth-child(2) > span { animation-delay: .12s; }
+.hero .lead { animation: fadeUp .8s .35s cubic-bezier(.2, .8, .2, 1) both; }
+.hero-actions { animation: fadeUp .8s .5s cubic-bezier(.2, .8, .2, 1) both; }
+.hero .status { animation: fadeUp .8s .65s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes lineUp { from { translate: 0 110%; } to { translate: 0 0; } }
+@keyframes fadeUp { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+
+@media (min-width: 641px) { .hp figcaption { white-space: nowrap; } }
+
+/* Escenario: brillo que cruza, círculo que respira, celulares flotando */
+.stage::before { animation: breathe 7s ease-in-out infinite alternate; }
+.stage::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .16) 50%, transparent 62%);
+  background-size: 260% 100%; animation: sheen 7s ease-in-out infinite;
+}
+@keyframes breathe { from { scale: 1; } to { scale: 1.14; } }
+@keyframes sheen { 0% { background-position: 130% 0; } 55%, 100% { background-position: -130% 0; } }
+.hp .phone { animation: bob 5.5s ease-in-out infinite; }
+.hp1 .phone { animation-delay: -1.8s; }
+.hp2 .phone { animation-delay: -3.4s; }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+.stage-hint { position: absolute; top: 16px; left: 22px; z-index: 3; font-size: .82rem; font-weight: 600; color: var(--on-accent); opacity: .85; }
+
+.fchip {
+  position: absolute; z-index: 3; white-space: nowrap;
+  background: rgba(255, 255, 255, .94); color: #0a0f1a; font-weight: 700; font-size: .82rem;
+  padding: 7px 13px; border-radius: 999px; box-shadow: 0 10px 24px rgba(0, 0, 0, .22);
+  transform: translate(calc(var(--mx, 0) * var(--k, 1) * 14px), calc(var(--my, 0) * var(--k, 1) * 10px));
+  animation: drift 6s ease-in-out infinite;
+}
+.fchip.c0 { top: 13%; left: 5%; }
+.fchip.c1 { top: 13%; right: 5%; animation-delay: -2s; }
+@keyframes drift { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+
+/* Aparición al hacer scroll */
+.reveal { opacity: 0; }
+.reveal.in { animation: revealUp .8s cubic-bezier(.2, .8, .2, 1) var(--d, 0ms) both; }
+.reveal.in.done { animation: none; opacity: 1; }
+@keyframes revealUp { from { opacity: 0; translate: 0 44px; } to { opacity: 1; translate: 0 0; } }
+
+/* Tarjeta ganadora: brillo que la cruza y etiqueta que late */
+.card.top::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, .3) 50%, transparent 60%);
+  background-size: 260% 100%; animation: sheen 4.5s ease-in-out infinite;
+}
+.ribbon { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { scale: 1; } 50% { scale: 1.09; } }
+.card-visual, .detail-visual { position: relative; }
+
+/* Fichas: la batería se llena y los pros y contras entran uno a uno */
+.batt { max-width: 380px; margin: 22px 0 0; }
+.batt-label { display: flex; justify-content: space-between; font-size: .9rem; margin-bottom: 7px; }
+.batt-track { height: 16px; border-radius: 999px; background: var(--tint); overflow: hidden; }
+.batt-fill {
+  display: block; height: 100%; width: 0; border-radius: 999px; position: relative; overflow: hidden;
+  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #fff));
+  transition: width 1.6s cubic-bezier(.2, .8, .2, 1) .4s;
+}
+.batt-fill::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%);
+  background-size: 250% 100%; animation: sheen 3s ease-in-out infinite 2s;
+}
+.detail.in .batt-fill { width: var(--w); }
+.detail:not(.in) li { opacity: 0; }
+.detail.in:not(.done) li { animation: liIn .55s cubic-bezier(.2, .8, .2, 1) calc(var(--i, 0) * 110ms + 350ms) both; }
+@keyframes liIn { from { opacity: 0; translate: -18px 0; } to { opacity: 1; translate: 0 0; } }
+
+/* Comparador: las barras crecen, el ganador destella */
+.mini-bar > span { width: var(--w, 0%); transform-origin: left; }
+.compare:not(.go) .mini-bar > span { transform: scaleX(0); }
+.compare.go .mini-bar > span { transform: scaleX(1); transition: transform 1.1s cubic-bezier(.2, .8, .2, 1) calc(var(--r, 0) * 55ms); }
+.compare.go td.best { animation: flash 1.3s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--good) 48%, var(--surface)); } }
+.verdict.swap { animation: fadeUp .5s cubic-bezier(.2, .8, .2, 1) both; }
+
+/* Carrito: el contador rebota, un mini celular vuela y hay confeti */
+.btn .count { display: inline-block; }
+.count.bump { animation: bump .55s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes bump { 0% { scale: 1; } 40% { scale: 1.7; } 100% { scale: 1; } }
+.fly { position: fixed; z-index: 70; width: 16px; height: 28px; border-radius: 5px; pointer-events: none; box-shadow: 0 6px 14px rgba(0, 0, 0, .3); }
+.confetti { position: fixed; z-index: 80; width: 9px; height: 14px; border-radius: 2px; pointer-events: none; }
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 920px) {
+  .nav { display: none; }
+  .topbar-inner { justify-content: space-between; gap: 12px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  .lead { max-width: none; }
+  .detail, .detail:nth-child(even) { grid-template-columns: 1fr; gap: 28px; }
+  .detail:nth-child(even) .detail-visual { order: 0; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+  .section { padding: 48px 16px; }
+  .topbar-inner { flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .swatch { width: 20px; height: 20px; }
+  .stage { min-height: 380px; padding: 36px 8px 22px; border-radius: 30px; }
+  .hp0 .phone, .hp2 .phone { --w: 82px; }
+  .hp1 .phone { --w: 106px; }
+  .hp { width: 94px; }
+  .hp1 { width: 116px; }
+  .hp figcaption strong { font-size: .85rem; }
+  .hp figcaption span { font-size: .78rem; }
+  .fchip { display: none; }
+  .proscons { grid-template-columns: 1fr; gap: 24px; }
+  .pros { padding-right: 0; }
+  .cons { padding: 24px 0 0; border-left: 0; border-top: 2px solid var(--line); }
+  .priority select { min-width: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .reveal, .detail:not(.in) li { opacity: 1 !important; }
+  .compare:not(.go) .mini-bar > span { transform: none !important; }
+  .batt-fill { width: var(--w) !important; }
+}
+
+</style>
+</head>
+<body>
+  <a class="skip" href="#catalogo">Saltar al catálogo</a>
+  <div id="progress" class="progress" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="logo" href="#inicio" aria-label="CelularHub, inicio">
+        <span class="logo-mark" aria-hidden="true"></span>CelularHub
+      </a>
+      <nav class="nav" aria-label="Secciones">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#detalles">Pros y contras</a>
+        <a href="#comparador">Comparador</a>
+        <a href="#metodo">Cómo se calcula</a>
+      </nav>
+      <div class="tools">
+        <div class="swatches" role="group" aria-label="Color de la página">
+          <button class="swatch" data-accent="blue"   title="Océano"    aria-label="Color océano"></button>
+          <button class="swatch" data-accent="orange" title="Atardecer" aria-label="Color atardecer"></button>
+          <button class="swatch" data-accent="green"  title="Bosque"    aria-label="Color bosque"></button>
+          <button class="swatch" data-accent="violet" title="Uva"       aria-label="Color uva"></button>
+        </div>
+        <button id="btn-theme" class="icon-btn" aria-label="Cambiar a modo oscuro" title="Modo claro u oscuro">🌙</button>
+        <button id="btn-admin" class="icon-btn" aria-label="Abrir panel de administración" title="Administrar datos">⚙️</button>
+        <button id="btn-cart" class="btn btn-primary btn-sm">Carrito <span id="cart-count" class="count">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1><span class="ln"><span>¿Cuál celular</span></span><span class="ln"><span>te conviene?</span></span></h1>
+          <p class="lead">Comparamos tres celulares muy conocidos con los mismos criterios: precio, materiales, batería, cámara y años de soporte.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#comparador">Ver la comparación</a>
+            <a class="btn btn-ghost btn-lg" href="#catalogo">Ver los celulares</a>
+          </div>
+          <p id="status" class="status" role="status">Conectando con la base de datos…</p>
+        </div>
+        <div class="stage" aria-label="Los tres celulares comparados">
+          <p class="stage-hint">Toca un celular para verlo por detrás</p>
+          <div id="hero-chips"></div>
+          <div id="hero-phones" class="hero-phones"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="wrap section">
+      <div class="section-head reveal" data-k="head">
+        <div>
+          <h2>Los tres celulares</h2>
+          <p class="muted">Precios de referencia en pesos colombianos. <span id="last-update"></span></p>
+        </div>
+      </div>
+      <div id="grid" class="grid" aria-live="polite"></div>
+    </section>
+
+    <section id="detalles" class="wrap section">
+      <div class="section-head reveal" data-k="head">
+        <div>
+          <h2>Lo bueno y lo malo de cada uno</h2>
+          <p class="muted">Una ficha por celular, con sus ventajas, sus desventajas y dónde comprarlo.</p>
+        </div>
+      </div>
+      <div id="details"></div>
+    </section>
+
+    <section id="comparador" class="wrap section">
+      <div class="section-head reveal" data-k="head">
+        <div>
+          <h2>Comparación lado a lado</h2>
+          <p class="muted">La celda verde es la mejor en esa fila. Las barras muestran qué tan lejos queda cada uno.</p>
+        </div>
+        <label class="priority" for="priority">
+          Lo que más me importa
+          <select id="priority">
+            <option value="equilibrado">Un poco de todo</option>
+            <option value="precio">Gastar poco</option>
+            <option value="camara">La cámara</option>
+            <option value="bateria">La batería</option>
+            <option value="rendimiento">El rendimiento</option>
+            <option value="durabilidad">Que dure muchos años</option>
+          </select>
+        </label>
+      </div>
+      <div id="verdict" class="verdict" aria-live="polite"></div>
+      <div class="table-scroll">
+        <table id="compare-table" class="compare"></table>
+      </div>
+    </section>
+
+    <section id="metodo" class="wrap section">
+      <div class="section-head reveal" data-k="head">
+        <div>
+          <h2>Cómo se calcula el puntaje</h2>
+          <p class="muted">Para que la comparación se pueda explicar y defender.</p>
+        </div>
+      </div>
+      <div class="method reveal" data-k="method">
+        <details open>
+          <summary>Qué mide el puntaje de 0 a 100</summary>
+          <p>Cada criterio se lleva a una escala de 0 a 1 entre los tres celulares: el mejor valor recibe 1 y el peor recibe 0. En el precio, el más barato es el mejor. Después cada criterio se multiplica por su peso y se suma. El peso cambia según lo que elijas en «Lo que más me importa».</p>
+        </details>
+        <details>
+          <summary>Qué criterios entran al puntaje</summary>
+          <p>Precio, rendimiento, calidad de cámara, batería, resistencia, valoración de usuarios, años de actualizaciones y almacenamiento. El resto de las filas (pantalla, procesador, peso) se muestran para comparar, pero no suman al puntaje.</p>
+        </details>
+        <details>
+          <summary>Por qué los megapíxeles no suman directamente</summary>
+          <p>Más megapíxeles no siempre significa mejores fotos. Por eso el puntaje usa una calificación de calidad de cámara de 0 a 10 y los megapíxeles se muestran solo como dato.</p>
+        </details>
+        <details>
+          <summary>De dónde salen los datos</summary>
+          <p>Las especificaciones son las publicadas por cada fabricante. Los puntajes de rendimiento, cámara y resistencia son valoraciones referenciales de este proyecto y se pueden cambiar en la base de datos. Los precios son aproximados: confírmalos en la tienda antes de comprar.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Proyecto universitario. Los datos se leen de MySQL y se actualizan cada 30 segundos.</div>
+  </footer>
+
+  <!-- Carrito -->
+  <aside id="cart-drawer" class="drawer" aria-hidden="true" aria-label="Carrito de compras">
+    <div class="drawer-head">
+      <h3>Tu carrito</h3>
+      <button id="cart-close" class="icon-btn" aria-label="Cerrar carrito">✕</button>
+    </div>
+    <div id="cart-items" class="drawer-body"></div>
+    <div class="drawer-foot">
+      <div class="total"><span>Total</span><strong id="cart-total">$0</strong></div>
+      <button id="cart-checkout" class="btn btn-primary">Finalizar compra (demo)</button>
+      <button id="cart-clear" class="btn btn-ghost">Vaciar carrito</button>
+    </div>
+  </aside>
+
+  <!-- Panel admin -->
+  <div id="admin-modal" class="modal" aria-hidden="true" role="dialog" aria-label="Panel de administración">
+    <div class="modal-card">
+      <div class="drawer-head">
+        <h3>Administrar datos</h3>
+        <button id="admin-close" class="icon-btn" aria-label="Cerrar panel">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="muted small">Los cambios se guardan en MySQL y se ven al instante en la página. Cada cambio de precio queda en el historial. Los pros, contras y links se editan en phpMyAdmin.</p>
+        <label class="key-field" for="admin-key">Clave de administrador
+          <input id="admin-key" type="password" autocomplete="off" placeholder="La que definiste en config.php" />
+        </label>
+        <div class="table-scroll">
+          <table class="admin-table" id="admin-table"></table>
+        </div>
+        <p id="admin-msg" class="small" role="status"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay"></div>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+/* ============================================================
+   CelularHub · lógica de la página
+   - Lee los celulares desde api.php (MySQL) y se actualiza cada 30 s
+   - Si no hay servidor (abres index.html directo), usa datos de respaldo
+   ============================================================ */
+"use strict";
+
+const API = "api.php";
+const REFRESH_MS = 30000;
+const REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Datos de respaldo: solo se usan si api.php no responde */
+const FALLBACK = [
+  {
+    id: 1, slug: "iphone-15", name: "iPhone 15", brand: "Apple",
+    tagline: "Fluido, con muy buena cámara y muchos años de soporte",
+    description: "El iPhone de entrada de la generación 15, con USB-C, chip A16 Bionic y cámara principal de 48 MP.",
+    material: "Aluminio y vidrio Ceramic Shield", os: "iOS", screen: '6.1" OLED, 60 Hz', processor: "Apple A16 Bionic",
+    storage_gb: 128, ram_gb: 6, camera_mp: 48, cameras: 2, battery_mah: 3349, weight_g: 171,
+    performance_score: 9, camera_score: 9, durability: 9, rating: 4.6, updates_years: 6, warranty_months: 12,
+    price: 3600000, stock: 15, color: "#4f7cff", image_url: null, updated_at: "",
+    pros: ["El chip A16 Bionic sigue siendo muy rápido.", "Cámara de 48 MP con muy buen video.", "Conserva bien su valor de reventa."],
+    cons: ["Pantalla de 60 Hz.", "Carga lenta y sin cargador en la caja.", "Es el más caro de los tres."],
+    links: [{ store: "Apple Colombia", url: "https://www.apple.com/co/iphone/" }, { store: "Mercado Libre", url: "https://listado.mercadolibre.com.co/iphone-15" }],
+  },
+  {
+    id: 2, slug: "galaxy-s24", name: "Galaxy S24", brand: "Samsung",
+    tagline: "Pantalla de 120 Hz y 7 años de actualizaciones",
+    description: "El gama alta compacto de Samsung, con pantalla AMOLED de 120 Hz e inteligencia artificial integrada.",
+    material: "Aluminio y vidrio Gorilla Glass Victus 2", os: "Android (One UI)", screen: '6.2" AMOLED, 120 Hz', processor: "Exynos 2400 (según región)",
+    storage_gb: 256, ram_gb: 8, camera_mp: 50, cameras: 3, battery_mah: 4000, weight_g: 167,
+    performance_score: 9, camera_score: 8.5, durability: 9, rating: 4.5, updates_years: 7, warranty_months: 12,
+    price: 3400000, stock: 20, color: "#8a6df0", image_url: null, updated_at: "",
+    pros: ["Pantalla AMOLED de 120 Hz muy brillante.", "7 años de actualizaciones.", "Compacto y liviano (167 g)."],
+    cons: ["Carga rápida de solo 25 W.", "Batería de 4000 mAh, no destaca.", "Precio alto frente a la gama media."],
+    links: [{ store: "Samsung Colombia", url: "https://www.samsung.com/co/smartphones/" }, { store: "Mercado Libre", url: "https://listado.mercadolibre.com.co/samsung-galaxy-s24" }],
+  },
+  {
+    id: 3, slug: "redmi-note-13-pro", name: "Redmi Note 13 Pro", brand: "Xiaomi",
+    tagline: "La opción económica con batería enorme y cámara de 200 MP",
+    description: "El gama media más vendido de Xiaomi, con pantalla AMOLED de 120 Hz y carga de 67 W.",
+    material: "Marco de plástico y vidrio frontal Gorilla Glass Victus", os: "Android (HyperOS)", screen: '6.67" AMOLED, 120 Hz', processor: "Snapdragon 7s Gen 2",
+    storage_gb: 256, ram_gb: 8, camera_mp: 200, cameras: 3, battery_mah: 5100, weight_g: 187,
+    performance_score: 6.5, camera_score: 7.5, durability: 6.5, rating: 4.3, updates_years: 4, warranty_months: 12,
+    price: 1250000, stock: 35, color: "#14a898", image_url: null, updated_at: "",
+    pros: ["Cuesta casi una tercera parte que los otros dos.", "Batería de 5100 mAh y carga de 67 W.", "Pantalla AMOLED de 120 Hz grande."],
+    cons: ["Marco de plástico.", "Protección IP54, solo salpicaduras.", "Solo 4 años de actualizaciones de seguridad."],
+    links: [{ store: "Xiaomi Colombia", url: "https://www.mi.com/co/" }, { store: "Mercado Libre", url: "https://listado.mercadolibre.com.co/redmi-note-13-pro" }],
+  },
+];
+
+/* Filas del comparador.
+   best: "max" o "min" decide qué celda se marca en verde; null = solo se muestra.
+   bar: true dibuja una barra proporcional bajo el valor. */
+const ROWS = [
+  { key: "price", label: "Precio", fmt: (v) => money(v), best: "min", bar: true },
+  { key: "material", label: "Materiales", fmt: (v) => esc(v) },
+  { key: "screen", label: "Pantalla", fmt: (v) => esc(v) },
+  { key: "processor", label: "Procesador", fmt: (v) => esc(v) },
+  { key: "os", label: "Sistema", fmt: (v) => esc(v) },
+  { key: "storage_gb", label: "Almacenamiento", fmt: (v) => `${v} GB`, best: "max", bar: true },
+  { key: "ram_gb", label: "Memoria RAM", fmt: (v) => `${v} GB`, best: "max", bar: true },
+  { key: "camera_mp", label: "Cámara principal", fmt: (v) => `${v} MP`, best: null, bar: true },
+  { key: "camera_score", label: "Calidad de cámara (0 a 10)", fmt: (v) => `${v}`, best: "max", bar: true },
+  { key: "battery_mah", label: "Batería", fmt: (v) => `${Number(v).toLocaleString("es-CO")} mAh`, best: "max", bar: true },
+  { key: "weight_g", label: "Peso", fmt: (v) => `${v} g`, best: "min", bar: true },
+  { key: "performance_score", label: "Rendimiento (0 a 10)", fmt: (v) => `${v}`, best: "max", bar: true },
+  { key: "durability", label: "Resistencia (0 a 10)", fmt: (v) => `${v}`, best: "max", bar: true },
+  { key: "rating", label: "Valoración de usuarios", fmt: (v) => `★ ${Number(v).toFixed(1)}`, best: "max", bar: true },
+  { key: "updates_years", label: "Años de actualizaciones", fmt: (v) => `${v} años`, best: "max", bar: true },
+  { key: "warranty_months", label: "Garantía", fmt: (v) => `${v} meses`, best: "max" },
+];
+
+/* Pesos del puntaje según lo que más le importe a la persona (cada fila suma 1) */
+const WEIGHTS = {
+  equilibrado: { price: .20, performance_score: .15, camera_score: .15, battery_mah: .15, durability: .10, rating: .10, updates_years: .10, storage_gb: .05 },
+  precio:      { price: .50, performance_score: .10, camera_score: .10, battery_mah: .10, durability: .05, rating: .05, updates_years: .05, storage_gb: .05 },
+  camara:      { price: .10, performance_score: .10, camera_score: .50, battery_mah: .05, durability: .05, rating: .10, updates_years: .05, storage_gb: .05 },
+  bateria:     { price: .15, performance_score: .10, camera_score: .05, battery_mah: .50, durability: .05, rating: .05, updates_years: .05, storage_gb: .05 },
+  rendimiento: { price: .10, performance_score: .45, camera_score: .10, battery_mah: .10, durability: .05, rating: .05, updates_years: .10, storage_gb: .05 },
+  durabilidad: { price: .10, performance_score: .10, camera_score: .05, battery_mah: .05, durability: .35, rating: .10, updates_years: .25, storage_gb: 0 },
+};
+const LOWER_IS_BETTER = new Set(["price"]);
+const PRIORITY_TEXT = {
+  equilibrado: "buscas un poco de todo",
+  precio: "quieres gastar poco",
+  camara: "te importa la cámara",
+  bateria: "te importa la batería",
+  rendimiento: "quieres el mejor rendimiento",
+  durabilidad: "quieres que dure muchos años",
+};
+
+let products = [];
+let cart = loadCart();
+let online = true;
+let lastJson = "";
+let heroDrawn = false;
+let svgN = 0;                 // contador para dar ids únicos a los dibujos SVG
+const seen = new Set();       // bloques que ya aparecieron (para no repetir la animación)
+let barsSeen = false;
+
+/* ---------------- Utilidades ---------------- */
+const $ = (id) => document.getElementById(id);
+const money = (n) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+/* Solo deja pasar links http(s): evita que un dato de la base de datos ejecute código */
+function safeUrl(u) {
+  return /^https?:\/\//i.test(String(u)) ? String(u) : "#";
+}
+/* Foto del celular: link http(s) o ruta relativa a una imagen (img/mi-foto.png) */
+function safeImg(u) {
+  const s = String(u ?? "").trim();
+  return /^(https?:\/\/[^\s"'<>]+|[\w\-\/.]+\.(png|jpe?g|webp|avif))$/i.test(s) ? s : "";
+}
+function safeColor(c) {
+  return /^#[0-9a-f]{6}$/i.test(String(c)) ? c : "#4f7cff";
+}
+function safeSlug(s) {
+  return String(s ?? "").toLowerCase().replace(/[^a-z0-9-]/g, "");
+}
+/* Aclara (f > 0) u oscurece (f < 0) un color #rrggbb */
+function shade(hex, f) {
+  const n = parseInt(safeColor(hex).slice(1), 16);
+  const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(f >= 0 ? v + (255 - v) * f : v * (1 + f)));
+  return "#" + ch.map((v) => v.toString(16).padStart(2, "0")).join("");
+}
+const clockStr = () => new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit", hour12: false });
+const dateStr = () => {
+  const s = new Date().toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" });
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+/* Pone la hora y la fecha reales en la pantalla de cada celular dibujado */
+function tickClock() {
+  const hm = clockStr(), d = dateStr();
+  document.querySelectorAll("[data-clock]").forEach((el) => { el.textContent = hm; });
+  document.querySelectorAll("[data-date]").forEach((el) => { el.textContent = d; });
+}
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2600);
+}
+function loadCart() {
+  try { return JSON.parse(localStorage.getItem("cart") || "[]"); } catch (e) { return []; }
+}
+function saveCart() {
+  try { localStorage.setItem("cart", JSON.stringify(cart)); } catch (e) { /* sin almacenamiento */ }
+}
+
+/* ---------------- Tema: color de la página y modo oscuro ---------------- */
+const root = document.documentElement;
+
+function setAccent(name) {
+  root.setAttribute("data-accent", name);
+  try { localStorage.setItem("accent", name); } catch (e) { /* ignorar */ }
+  document.querySelectorAll(".swatch").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.accent === name)));
+}
+function setTheme(name) {
+  root.setAttribute("data-theme", name);
+  try { localStorage.setItem("theme", name); } catch (e) { /* ignorar */ }
+  const btn = $("btn-theme");
+  btn.textContent = name === "dark" ? "☀️" : "🌙";
+  btn.setAttribute("aria-label", name === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+}
+
+/* ---------------- Datos ---------------- */
+async function loadProducts() {
+  try {
+    const res = await fetch(API + "?action=products", { cache: "no-store" });
+    const text = await res.text();
+    const data = JSON.parse(text);
+    if (!res.ok || !Array.isArray(data)) throw new Error((data && data.error) || "Respuesta inesperada");
+    online = true;
+    if (text === lastJson) { renderStatus(); return; }   // nada cambió: no redibujar
+    lastJson = text;
+    products = data;
+  } catch (e) {
+    online = false;
+    if (products.length) { renderStatus(); return; }     // ya hay datos en pantalla: no redibujar
+    products = FALLBACK;
+  }
+  renderAll();
+}
+
+/* ---------------- Puntaje ---------------- */
+function computeScores(list, priority) {
+  const w = WEIGHTS[priority] || WEIGHTS.equilibrado;
+  const total = new Map(list.map((p) => [p.id, 0]));
+  for (const key of Object.keys(w)) {
+    if (!w[key]) continue;
+    const vals = list.map((p) => Number(p[key]) || 0);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    for (const p of list) {
+      let norm = max === min ? 1 : ((Number(p[key]) || 0) - min) / (max - min);
+      if (LOWER_IS_BETTER.has(key) && max !== min) norm = 1 - norm;
+      total.set(p.id, total.get(p.id) + norm * w[key]);
+    }
+  }
+  const out = new Map();
+  for (const [id, s] of total) out.set(id, Math.round(s * 100));
+  return out;
+}
+
+/* ---------------- Dibujo del celular (SVG, genérico y realista) ----------------
+   Cada celular se dibuja con su color de la base de datos: botones laterales,
+   pantalla con hora real y parte trasera con módulo de cámaras. Si la tabla tiene
+   image_url, se muestra esa foto en lugar del dibujo. */
+function frontSVG(p, u) {
+  const c = safeColor(p.color);
+  const frameA = shade(c, .55), frameB = shade(c, -.38);
+  return `<svg viewBox="0 0 200 410" focusable="false" aria-hidden="true">
+  <defs>
+    <linearGradient id="${u}f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${frameA}"/><stop offset=".5" stop-color="${shade(c, .1)}"/><stop offset="1" stop-color="${frameB}"/></linearGradient>
+    <linearGradient id="${u}w" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="${shade(c, .38)}"/><stop offset=".55" stop-color="${shade(c, -.12)}"/><stop offset="1" stop-color="${shade(c, -.66)}"/></linearGradient>
+    <radialGradient id="${u}r" cx=".28" cy=".2" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="${u}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".26"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="${u}c"><rect x="12" y="12" width="176" height="386" rx="27"/></clipPath>
+  </defs>
+  <rect x="0" y="92" width="6" height="26" rx="2" fill="${frameB}"/>
+  <rect x="0" y="126" width="6" height="26" rx="2" fill="${frameB}"/>
+  <rect x="194" y="116" width="6" height="46" rx="2" fill="${frameB}"/>
+  <rect x="3" y="3" width="194" height="404" rx="36" fill="url(#${u}f)"/>
+  <rect x="9" y="9" width="182" height="392" rx="30" fill="#05070b"/>
+  <rect x="12" y="12" width="176" height="386" rx="27" fill="url(#${u}w)"/>
+  <g clip-path="url(#${u}c)">
+    <rect x="12" y="12" width="176" height="386" fill="url(#${u}r)"/>
+    <path d="M12 300 C 60 270, 110 330, 188 290 L188 398 L12 398 Z" fill="#fff" fill-opacity=".08"/>
+    <path d="M12 332 C 70 305, 120 362, 188 326 L188 398 L12 398 Z" fill="#000" fill-opacity=".16"/>
+    <text x="28" y="31" font-size="9" font-weight="700" fill="#fff" data-clock>${clockStr()}</text>
+    <g fill="#fff"><rect x="138" y="29" width="2.6" height="3" rx=".8"/><rect x="142" y="27" width="2.6" height="5" rx=".8"/><rect x="146" y="25" width="2.6" height="7" rx=".8"/></g>
+    <rect x="153" y="24" width="17" height="8" rx="2.5" fill="none" stroke="#fff" stroke-width="1"/>
+    <rect x="154.8" y="25.8" width="10.5" height="4.4" rx="1.2" fill="#fff"/>
+    <rect x="171" y="26.5" width="1.6" height="3" rx=".8" fill="#fff"/>
+    <text x="100" y="72" font-size="10.5" text-anchor="middle" fill="#fff" fill-opacity=".88" data-date>${esc(dateStr())}</text>
+    <text x="100" y="124" font-size="56" font-weight="600" text-anchor="middle" fill="#fff" style="font-family:var(--font-head);letter-spacing:-2px" data-clock>${clockStr()}</text>
+    <rect x="26" y="150" width="72" height="54" rx="14" fill="#fff" fill-opacity=".17"/>
+    <circle cx="48" cy="177" r="12" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="4"/>
+    <circle cx="48" cy="177" r="12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="53 75.4" transform="rotate(-90 48 177)"/>
+    <text x="66" y="181" font-size="11" font-weight="700" fill="#fff">70%</text>
+    <rect x="102" y="150" width="72" height="54" rx="14" fill="#fff" fill-opacity=".17"/>
+    <rect x="118" y="186" width="8" height="10" rx="3" fill="#fff" fill-opacity=".85"/>
+    <rect x="132" y="176" width="8" height="20" rx="3" fill="#fff" fill-opacity=".85"/>
+    <rect x="146" y="166" width="8" height="30" rx="3" fill="#fff"/>
+    <rect x="24" y="218" width="152" height="38" rx="14" fill="#fff" fill-opacity=".22"/>
+    <rect x="32" y="227" width="20" height="20" rx="6" fill="${shade(c, .75)}"/>
+    <rect x="60" y="229" width="70" height="5" rx="2.5" fill="#fff" fill-opacity=".9"/>
+    <rect x="60" y="239" width="96" height="4" rx="2" fill="#fff" fill-opacity=".5"/>
+    <rect x="24" y="262" width="152" height="32" rx="13" fill="#fff" fill-opacity=".14"/>
+    <rect x="32" y="269" width="18" height="18" rx="6" fill="${shade(c, -.2)}"/>
+    <rect x="58" y="271" width="60" height="4.5" rx="2.2" fill="#fff" fill-opacity=".85"/>
+    <rect x="58" y="280" width="84" height="3.5" rx="1.8" fill="#fff" fill-opacity=".45"/>
+    <circle cx="44" cy="362" r="15" fill="#000" fill-opacity=".28"/>
+    <rect x="40" y="355" width="8" height="14" rx="3" fill="#fff" fill-opacity=".85"/>
+    <circle cx="156" cy="362" r="15" fill="#000" fill-opacity=".28"/>
+    <circle cx="156" cy="362" r="5.5" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="1.6"/>
+    <rect x="70" y="386" width="60" height="4" rx="2" fill="#fff" fill-opacity=".85"/>
+    <circle cx="100" cy="27" r="6" fill="#000"/>
+    <circle cx="100" cy="27" r="7.6" fill="none" stroke="#0d121b" stroke-width="1.2"/>
+    <circle cx="98.4" cy="25.5" r="1.3" fill="#2a4478"/>
+    <path d="M12 12 H118 L12 236 Z" fill="url(#${u}g)"/>
+  </g>
+</svg>`;
+}
+
+function backSVG(p, u, n) {
+  const c = safeColor(p.color);
+  const frameB = shade(c, -.38);
+  const pillW = n * 36 + 42, px = (200 - pillW) / 2, py = 24;
+  let lenses = "";
+  for (let i = 0; i < n; i++) {
+    const cx = px + 26 + i * 36, cy = py + 26;
+    lenses += `<circle cx="${cx}" cy="${cy}" r="14.5" fill="url(#${u}k)"/>
+    <circle cx="${cx}" cy="${cy}" r="10.6" fill="#090c13"/>
+    <circle cx="${cx}" cy="${cy}" r="7" fill="url(#${u}l)"/>
+    <circle cx="${cx - 3}" cy="${cy - 3}" r="2" fill="#fff" fill-opacity=".7"/>`;
+  }
+  return `<svg viewBox="0 0 200 410" focusable="false" aria-hidden="true">
+  <defs>
+    <linearGradient id="${u}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(c, .34)}"/><stop offset=".5" stop-color="${shade(c, -.04)}"/><stop offset="1" stop-color="${shade(c, -.52)}"/></linearGradient>
+    <radialGradient id="${u}k" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#9aa3b5"/><stop offset="1" stop-color="#171c27"/></radialGradient>
+    <radialGradient id="${u}l" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#4a5d8c"/><stop offset="1" stop-color="#05070c"/></radialGradient>
+  </defs>
+  <rect x="194" y="92" width="6" height="26" rx="2" fill="${frameB}"/>
+  <rect x="194" y="126" width="6" height="26" rx="2" fill="${frameB}"/>
+  <rect x="0" y="116" width="6" height="46" rx="2" fill="${frameB}"/>
+  <rect x="3" y="3" width="194" height="404" rx="36" fill="url(#${u}b)"/>
+  <rect x="7" y="7" width="186" height="396" rx="32" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="1.2"/>
+  <path d="M3 170 L197 52 L197 128 L3 250 Z" fill="#fff" fill-opacity=".08"/>
+  <path d="M3 300 L197 210 L197 250 L3 340 Z" fill="#fff" fill-opacity=".05"/>
+  <rect x="${px}" y="${py}" width="${pillW}" height="52" rx="26" fill="#05070b" fill-opacity=".55" stroke="#fff" stroke-opacity=".16"/>
+  ${lenses}
+  <circle cx="${px + pillW - 17}" cy="${py + 26}" r="5" fill="#fff3d6" fill-opacity=".92" stroke="#000" stroke-opacity=".3"/>
+</svg>`;
+}
+
+function phoneHTML(p, hint) {
+  const img = safeImg(p.image_url);
+  if (img) {
+    return `<div class="phone photo"><img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" /></div>`;
+  }
+  const u = "p" + (++svgN);
+  const n = Math.min(Math.max(Number(p.cameras) || 2, 1), 4);
+  return `<div class="phone" role="button" tabindex="0" aria-label="Girar ${esc(p.name)} para ver la parte de atrás">
+    <div class="ph-inner">
+      <div class="ph-face ph-front">${frontSVG(p, u)}</div>
+      <div class="ph-face ph-back">${backSVG(p, u, n)}</div>
+    </div>
+  </div>${hint ? `<span class="flip-hint">Toca para girar</span>` : ""}`;
+}
+
+function buyLinks(p) {
+  if (!p.links || !p.links.length) return `<span class="muted small">Sin links de compra</span>`;
+  return p.links.map((l) =>
+    `<a class="buy-link" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer">Comprar en ${esc(l.store)} ↗</a>`
+  ).join("");
+}
+
+/* Clase de aparición al hacer scroll: si ya apareció antes, no se repite */
+const rc = (key) => "reveal" + (seen.has(key) ? " in done" : "");
+
+/* ---------------- Dibujo de la página ---------------- */
+function rank() {
+  const priority = $("priority").value;
+  const scores = computeScores(products, priority);
+  const winnerId = [...scores.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  return { priority, scores, winnerId };
+}
+
+function renderAll() {
+  const r = rank();
+  renderStatus();
+  renderHero();
+  renderGrid(r.winnerId);
+  renderDetails();
+  renderCompare(r.scores, r.winnerId, r.priority);
+  renderCart();
+  afterRender();
+}
+
+/* Cuando solo cambia la prioridad: se redibujan el catálogo y el comparador */
+function renderRanking() {
+  const r = rank();
+  renderGrid(r.winnerId);
+  renderCompare(r.scores, r.winnerId, r.priority);
+  afterRender();
+}
+
+function afterRender() {
+  tickClock();
+  watchReveals();
+}
+
+function renderStatus() {
+  const s = $("status");
+  s.textContent = online
+    ? "Conectado a MySQL: datos en vivo"
+    : "Sin conexión con la base de datos: mostrando datos de respaldo";
+  s.className = "status " + (online ? "ok" : "off");
+  const latest = products.map((p) => p.updated_at).filter(Boolean).sort().pop();
+  $("last-update").textContent = latest ? "Datos actualizados el " + String(latest).replace("T", " a las ") + "." : "";
+}
+
+function renderHero() {
+  const el = $("hero-phones");
+  el.innerHTML = products.slice(0, 3).map((p, i) => `
+    <figure class="hp hp${i}">
+      ${phoneHTML(p, false)}
+      <figcaption><strong>${esc(p.name)}</strong><span>${money(p.price)}</span></figcaption>
+    </figure>`).join("");
+
+  // Etiquetas flotantes con datos reales de la base de datos
+  const max = (k) => Math.max(...products.map((p) => Number(p[k]) || 0));
+  const min = (k) => Math.min(...products.map((p) => Number(p[k]) || 0));
+  const chips = [
+    `Desde ${money(min("price"))}`,
+    `Cámara de hasta ${max("camera_mp")} MP`,
+  ];
+  $("hero-chips").innerHTML = chips.map((t, i) => `<span class="fchip c${i}" style="--k:${i + 1}">${esc(t)}</span>`).join("");
+
+  if (!heroDrawn) {
+    heroDrawn = true;
+    el.classList.add("intro");
+    setTimeout(() => el.classList.remove("intro"), 1600);
+  }
+}
+
+function stockLabel(stock) {
+  if (stock <= 0) return `<span class="stock out">Agotado</span>`;
+  if (stock <= 10) return `<span class="stock low">Quedan ${stock} unidades</span>`;
+  return `<span class="stock muted">${stock} unidades disponibles</span>`;
+}
+
+function renderGrid(winnerId) {
+  $("grid").innerHTML = products.map((p, i) => `
+    <article class="card ${rc("card" + p.id)} ${p.id === winnerId ? "top" : ""}" data-k="card${p.id}" style="--pc:${safeColor(p.color)};--d:${i * 130}ms">
+      ${p.id === winnerId ? `<span class="ribbon">Mejor para ti</span>` : ""}
+      <div class="card-visual tilt">${phoneHTML(p, true)}</div>
+      <div class="card-body">
+        <span class="brand">${esc(p.brand)}</span>
+        <h3>${esc(p.name)}</h3>
+        <p class="tagline">${esc(p.tagline)}</p>
+        <div class="chips">
+          <span class="chip">${p.storage_gb} GB</span>
+          <span class="chip">${p.ram_gb} GB RAM</span>
+          <span class="chip">${Number(p.battery_mah).toLocaleString("es-CO")} mAh</span>
+        </div>
+        <div class="price-row">
+          <span class="price">${money(p.price)}</span>
+          <span class="stars">★ ${Number(p.rating).toFixed(1)}</span>
+        </div>
+        ${stockLabel(p.stock)}
+        <div class="card-actions">
+          <a class="btn btn-ghost btn-sm" href="#detalle-${safeSlug(p.slug)}">Pros y contras</a>
+          <button class="btn btn-primary btn-sm" data-add="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>Agregar al carrito</button>
+        </div>
+        <div class="buy-links">${buyLinks(p)}</div>
+      </div>
+    </article>`).join("");
+}
+
+function renderDetails() {
+  const spec = (label, value) => `<div><dt>${label}</dt><dd>${esc(value)}</dd></div>`;
+  const li = (t, i) => `<li style="--i:${i}">${esc(t)}</li>`;
+  $("details").innerHTML = products.map((p) => {
+    const pct = Math.max(6, Math.min(100, (Number(p.battery_mah) / 6000) * 100));
+    return `
+    <article class="detail ${rc("detail" + p.id)}" data-k="detail${p.id}" id="detalle-${safeSlug(p.slug)}" style="--pc:${safeColor(p.color)}">
+      <div class="detail-visual tilt">${phoneHTML(p, true)}</div>
+      <div class="detail-main">
+        <span class="brand">${esc(p.brand)}</span>
+        <h3>${esc(p.name)}</h3>
+        <p>${esc(p.description)}</p>
+        <div class="batt" style="--w:${pct.toFixed(1)}%">
+          <div class="batt-label"><span>Batería</span><strong>${Number(p.battery_mah).toLocaleString("es-CO")} mAh</strong></div>
+          <div class="batt-track"><span class="batt-fill"></span></div>
+        </div>
+        <dl class="spec-list">
+          ${spec("Pantalla", p.screen)}
+          ${spec("Procesador", p.processor)}
+          ${spec("Memoria", `${p.ram_gb} GB RAM y ${p.storage_gb} GB`)}
+          ${spec("Cámara principal", `${p.camera_mp} MP (${p.cameras} lentes)`)}
+          ${spec("Peso", `${p.weight_g} g`)}
+          ${spec("Materiales", p.material)}
+          ${spec("Software", `${p.os}, ${p.updates_years} años de actualizaciones`)}
+        </dl>
+        <div class="proscons">
+          <div class="pros">
+            <h4>Lo bueno</h4>
+            <ul>${(p.pros || []).map(li).join("")}</ul>
+          </div>
+          <div class="cons">
+            <h4>Lo malo</h4>
+            <ul>${(p.cons || []).map(li).join("")}</ul>
+          </div>
+        </div>
+        <div class="detail-buy">
+          <span>${money(p.price)}</span>
+          <button class="btn btn-primary btn-sm" data-add="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>Agregar al carrito</button>
+          <div class="buy-links">${buyLinks(p)}</div>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function barWidth(row, p) {
+  const nums = products.map((x) => Number(x[row.key]) || 0);
+  const v = Number(p[row.key]) || 0;
+  if (!v) return 0;
+  const pct = row.best === "min" ? (Math.min(...nums.filter(Boolean)) / v) * 100 : (v / Math.max(...nums)) * 100;
+  return Math.max(4, Math.min(100, pct));
+}
+
+function renderCompare(scores, winnerId, priority) {
+  const head = `<thead><tr><th scope="col"></th>${products.map((p) =>
+    `<th scope="col">${esc(p.name)}<small>${esc(p.brand)}</small></th>`).join("")}</tr></thead>`;
+
+  const body = ROWS.map((row, ri) => {
+    let bestVal = null;
+    if (row.best) {
+      const nums = products.map((p) => Number(p[row.key]));
+      bestVal = row.best === "min" ? Math.min(...nums) : Math.max(...nums);
+    }
+    const allEqual = new Set(products.map((p) => p[row.key])).size === 1;
+    const cells = products.map((p) => {
+      const isBest = row.best && !allEqual && Number(p[row.key]) === bestVal;
+      const bar = row.bar ? `<span class="mini-bar"><span style="--w:${barWidth(row, p).toFixed(1)}%;--r:${ri}"></span></span>` : "";
+      return `<td class="${isBest ? "best" : ""}">${row.fmt(p[row.key])}${bar}</td>`;
+    }).join("");
+    return `<tr><th scope="row">${row.label}</th>${cells}</tr>`;
+  }).join("");
+
+  const maxScore = Math.max(...scores.values());
+  const scoreRow = `<tr class="score"><th scope="row">Puntaje final</th>${products.map((p) => {
+    const s = scores.get(p.id);
+    return `<td class="${s === maxScore ? "best" : ""}"><span class="score-num"><b data-v="${s}">${s}</b><small> de 100</small></span>
+      <span class="mini-bar"><span style="--w:${s}%;--r:${ROWS.length}"></span></span></td>`;
+  }).join("")}</tr>`;
+
+  $("compare-table").innerHTML = head + `<tbody>${body}${scoreRow}</tbody>`;
+
+  const w = products.find((x) => x.id === winnerId);
+  const v = $("verdict");
+  v.innerHTML = w
+    ? `Si ${PRIORITY_TEXT[priority]}, el mejor es el <strong>${esc(w.name)}</strong> con ${scores.get(w.id)} de 100 puntos.`
+    : "";
+  v.classList.remove("swap"); void v.offsetWidth; v.classList.add("swap");
+
+  if (barsSeen) playBars();   // si ya se veía la tabla, las barras vuelven a crecer
+}
+
+/* ---------------- Animaciones ---------------- */
+/* Las barras del comparador crecen y los puntajes cuentan desde 0 */
+function playBars() {
+  const t = $("compare-table");
+  t.classList.remove("go");
+  void t.offsetWidth;
+  t.classList.add("go");
+  animateScores();
+}
+function animateScores() {
+  document.querySelectorAll("#compare-table .score-num b").forEach((b) => {
+    const target = Number(b.dataset.v) || 0;
+    if (REDUCE) { b.textContent = target; return; }
+    const t0 = performance.now(), dur = 1100;
+    b.textContent = "0";
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      b.textContent = Math.round(target * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+/* Los bloques aparecen al entrar en pantalla */
+let ioReveal = null;
+function watchReveals() {
+  const els = document.querySelectorAll(".reveal:not(.in)");
+  if (!els.length) return;
+  if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("in", "done")); return; }
+  if (!ioReveal) {
+    ioReveal = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("in");
+        if (en.target.dataset.k) seen.add(en.target.dataset.k);
+        ioReveal.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
+  }
+  els.forEach((e) => ioReveal.observe(e));
+}
+
+function bump() {
+  const cc = $("cart-count");
+  cc.classList.remove("bump"); void cc.offsetWidth; cc.classList.add("bump");
+}
+
+/* Un mini celular vuela desde el botón hasta el carrito */
+function flyToCart(btn, color) {
+  if (REDUCE || !btn || !btn.animate) return bump();
+  const a = btn.getBoundingClientRect(), b = $("btn-cart").getBoundingClientRect();
+  const el = document.createElement("div");
+  el.className = "fly";
+  el.style.background = `linear-gradient(155deg, ${shade(color, .3)}, ${shade(color, -.5)})`;
+  el.style.left = (a.left + a.width / 2 - 8) + "px";
+  el.style.top = (a.top + a.height / 2 - 14) + "px";
+  document.body.appendChild(el);
+  const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+  const dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+  el.animate([
+    { transform: "translate(0,0) scale(1) rotate(0deg)", opacity: 1 },
+    { transform: `translate(${dx * .45}px, ${dy * .45 - 90}px) scale(1.7) rotate(110deg)`, opacity: 1, offset: .45 },
+    { transform: `translate(${dx}px, ${dy}px) scale(.3) rotate(250deg)`, opacity: .8 },
+  ], { duration: 800, easing: "cubic-bezier(.5,0,.3,1)" }).onfinish = () => { el.remove(); bump(); };
+}
+
+/* Confeti al finalizar la compra */
+function confetti(x, y) {
+  if (REDUCE) return;
+  const colors = products.map((p) => safeColor(p.color)).concat(["#ffd23f", "#ff5d8f", "#2ee6a6"]);
+  for (let i = 0; i < 64; i++) {
+    const el = document.createElement("i");
+    el.className = "confetti";
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.background = colors[i % colors.length];
+    document.body.appendChild(el);
+    const ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 280;
+    const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 140;
+    el.animate([
+      { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random() * 720 - 360}deg)`, opacity: 1, offset: .55 },
+      { transform: `translate(${dx * 1.1}px, ${dy + 200}px) rotate(${Math.random() * 900 - 450}deg)`, opacity: 0 },
+    ], { duration: 1100 + Math.random() * 700, easing: "cubic-bezier(.15,.7,.3,1)" }).onfinish = () => el.remove();
+  }
+}
+
+/* Girar el celular para ver la parte de atrás */
+function flipPhone(ph) {
+  ph.classList.add("flipping");
+  ph.classList.toggle("flipped");
+  clearTimeout(ph._t);
+  ph._t = setTimeout(() => ph.classList.remove("flipping"), 1000);
+}
+
+/* ---------------- Carrito ---------------- */
+function addToCart(id, btn) {
+  const p = products.find((x) => x.id === id);
+  if (!p) return;
+  const line = cart.find((l) => l.id === id);
+  if ((line ? line.qty : 0) >= p.stock) return toast("No quedan más unidades de este celular");
+  if (line) line.qty++; else cart.push({ id, qty: 1 });
+  saveCart();
+  renderCart();
+  flyToCart(btn, p.color);
+  toast(`${p.name} agregado al carrito`);
+}
+
+function renderCart() {
+  cart = cart.filter((l) => products.some((p) => p.id === l.id));
+  $("cart-count").textContent = cart.reduce((a, l) => a + l.qty, 0);
+
+  if (!cart.length) {
+    $("cart-items").innerHTML = `<p class="muted" style="padding:16px 0">Tu carrito está vacío. Agrega un celular desde el catálogo.</p>`;
+    $("cart-total").textContent = money(0);
+    return;
+  }
+  let total = 0;
+  $("cart-items").innerHTML = cart.map((l) => {
+    const p = products.find((x) => x.id === l.id);
+    total += p.price * l.qty;
+    return `<div class="cart-line" style="--pc:${safeColor(p.color)}">
+      <div class="cart-thumb" aria-hidden="true"></div>
+      <div>
+        <strong>${esc(p.name)}</strong>
+        <div class="muted small">${money(p.price)} c/u</div>
+        <div class="qty">
+          <button data-dec="${p.id}" aria-label="Quitar una unidad">−</button>
+          <span>${l.qty}</span>
+          <button data-inc="${p.id}" aria-label="Agregar una unidad">+</button>
+        </div>
+      </div>
+      <strong>${money(p.price * l.qty)}</strong>
+    </div>`;
+  }).join("");
+  $("cart-total").textContent = money(total);
+}
+
+function changeQty(id, delta) {
+  const line = cart.find((l) => l.id === id);
+  const p = products.find((x) => x.id === id);
+  if (!line || !p) return;
+  line.qty += delta;
+  if (line.qty > p.stock) { line.qty = p.stock; toast("Llegaste al máximo disponible"); }
+  if (line.qty <= 0) cart = cart.filter((l) => l.id !== id);
+  saveCart();
+  renderCart();
+}
+
+/* ---------------- Paneles (carrito y admin) ---------------- */
+function openPanel(el) {
+  el.classList.add("open");
+  el.setAttribute("aria-hidden", "false");
+  $("overlay").classList.add("open");
+}
+function closePanels() {
+  for (const el of [$("cart-drawer"), $("admin-modal")]) {
+    el.classList.remove("open");
+    el.setAttribute("aria-hidden", "true");
+  }
+  $("overlay").classList.remove("open");
+}
+
+/* ---------------- Admin ---------------- */
+const ADMIN_FIELDS = [
+  { key: "price", label: "Precio (COP)", step: "1000", max: "" },
+  { key: "stock", label: "Stock", step: "1", max: "" },
+  { key: "rating", label: "Valoración (0 a 5)", step: "0.1", max: "5" },
+  { key: "durability", label: "Resistencia (0 a 10)", step: "0.5", max: "10" },
+  { key: "battery_mah", label: "Batería (mAh)", step: "50", max: "" },
+];
+
+function renderAdmin() {
+  $("admin-table").innerHTML = `
+    <thead><tr><th>Celular</th>${ADMIN_FIELDS.map((f) => `<th>${f.label}</th>`).join("")}<th></th></tr></thead>
+    <tbody>${products.map((p) => `
+      <tr data-id="${p.id}">
+        <td><strong>${esc(p.name)}</strong></td>
+        ${ADMIN_FIELDS.map((f) => `<td><input type="number" min="0" ${f.max ? `max="${f.max}"` : ""} step="${f.step}" data-f="${f.key}" value="${esc(p[f.key])}" aria-label="${f.label} de ${esc(p.name)}"></td>`).join("")}
+        <td><button class="btn btn-primary btn-sm" data-save="${p.id}">Guardar</button></td>
+      </tr>`).join("")}</tbody>`;
+}
+
+async function saveProduct(id) {
+  const row = document.querySelector(`#admin-table tr[data-id="${id}"]`);
+  const msg = $("admin-msg");
+  const payload = { admin_key: $("admin-key").value };
+  row.querySelectorAll("input[data-f]").forEach((i) => { payload[i.dataset.f] = i.value; });
+
+  if (!payload.admin_key) {
+    msg.style.color = "var(--bad)";
+    msg.textContent = "Escribe la clave de administrador para guardar.";
+    return;
+  }
+  try {
+    const res = await fetch(`${API}?action=update&id=${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({ error: "El servidor no respondió con datos válidos" }));
+    if (!res.ok) throw new Error(data.error || "No se pudo guardar");
+    msg.style.color = "var(--good)";
+    msg.textContent = `Guardado: ${data.name} ya está actualizado en la base de datos.`;
+    lastJson = "";
+    await loadProducts();
+    renderAdmin();
+  } catch (e) {
+    msg.style.color = "var(--bad)";
+    msg.textContent = e instanceof TypeError
+      ? "No hay conexión con el servidor. Abre la página desde http://localhost/ con Apache y MySQL encendidos en XAMPP."
+      : e.message;
+  }
+}
+
+/* ---------------- Eventos ---------------- */
+document.addEventListener("click", (e) => {
+  const sw = e.target.closest(".swatch");
+  if (sw) return setAccent(sw.dataset.accent);
+  const ph = e.target.closest(".phone:not(.photo)");
+  if (ph) return flipPhone(ph);
+  const t = e.target.closest("button");
+  if (!t) return;
+  if (t.dataset.add) addToCart(Number(t.dataset.add), t);
+  else if (t.dataset.inc) changeQty(Number(t.dataset.inc), 1);
+  else if (t.dataset.dec) changeQty(Number(t.dataset.dec), -1);
+  else if (t.dataset.save) saveProduct(Number(t.dataset.save));
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") return closePanels();
+  const ph = e.target.closest && e.target.closest(".phone:not(.photo)");
+  if (ph && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); flipPhone(ph); }
+});
+$("btn-theme").addEventListener("click", () => setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark"));
+$("btn-cart").addEventListener("click", () => openPanel($("cart-drawer")));
+$("cart-close").addEventListener("click", closePanels);
+$("admin-close").addEventListener("click", closePanels);
+$("overlay").addEventListener("click", closePanels);
+$("btn-admin").addEventListener("click", () => { $("admin-msg").textContent = ""; renderAdmin(); openPanel($("admin-modal")); });
+$("priority").addEventListener("change", renderRanking);
+$("cart-clear").addEventListener("click", () => { cart = []; saveCart(); renderCart(); });
+$("cart-checkout").addEventListener("click", (e) => {
+  if (!cart.length) return toast("Tu carrito está vacío");
+  const r = e.currentTarget.getBoundingClientRect();
+  confetti(r.left + r.width / 2, r.top + r.height / 2);
+  cart = []; saveCart(); renderCart();
+  setTimeout(closePanels, 450);
+  toast("Gracias. Es una demo: no se hizo ningún cobro.");
+});
+
+/* ---------------- Movimiento con el mouse ---------------- */
+if (!REDUCE) {
+  // Las tarjetas y fichas inclinan el celular según dónde esté el mouse
+  document.addEventListener("pointermove", (e) => {
+    if (e.pointerType === "touch") return;
+    const t = e.target.closest && e.target.closest(".tilt");
+    if (!t) return;
+    const r = t.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+    t.style.setProperty("--ry", (px * 34).toFixed(1) + "deg");
+    t.style.setProperty("--rx", (-py * 24).toFixed(1) + "deg");
+    t.classList.add("tilting");
+  });
+  document.addEventListener("pointerout", (e) => {
+    const t = e.target.closest && e.target.closest(".tilt");
+    if (!t || t.contains(e.relatedTarget)) return;
+    t.style.removeProperty("--ry");
+    t.style.removeProperty("--rx");
+    t.classList.remove("tilting");
+  });
+
+  // En la portada, los tres celulares y las etiquetas siguen al mouse (efecto de profundidad)
+  const stage = document.querySelector(".stage");
+  stage.addEventListener("pointermove", (e) => {
+    if (e.pointerType === "touch") return;
+    const r = stage.getBoundingClientRect();
+    const mx = ((e.clientX - r.left) / r.width - .5) * 2, my = ((e.clientY - r.top) / r.height - .5) * 2;
+    stage.style.setProperty("--mx", mx.toFixed(3));
+    stage.style.setProperty("--my", my.toFixed(3));
+    stage.style.setProperty("--ry", (mx * 18).toFixed(1) + "deg");
+    stage.style.setProperty("--rx", (-my * 12).toFixed(1) + "deg");
+    stage.classList.add("moving");
+  });
+  stage.addEventListener("pointerleave", () => {
+    ["--mx", "--my", "--ry", "--rx"].forEach((k) => stage.style.removeProperty(k));
+    stage.classList.remove("moving");
+  });
+}
+
+/* ---------------- Barra de progreso y menú que sigue la sección ---------------- */
+(function () {
+  const bar = $("progress");
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = `scaleX(${h > 0 ? Math.min(1, window.scrollY / h) : 0})`;
+      ticking = false;
+    });
+  }, { passive: true });
+
+  if (!("IntersectionObserver" in window)) { barsSeen = true; return; }
+
+  const links = [...document.querySelectorAll(".nav a")];
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  links.forEach((a) => { const s = document.querySelector(a.getAttribute("href")); if (s) spy.observe(s); });
+
+  // Las barras del comparador arrancan cuando la tabla entra en pantalla
+  const bars = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      barsSeen = true;
+      playBars();
+      bars.disconnect();
+    });
+  }, { threshold: 0.25 });
+  bars.observe($("compare-table"));
+})();
+
+/* ---------------- Inicio ---------------- */
+setTheme(root.getAttribute("data-theme") || "light");
+setAccent(root.getAttribute("data-accent") || "blue");
+watchReveals();
+loadProducts();
+setInterval(tickClock, 20000);
+setInterval(() => {
+  // No refrescar mientras el panel admin está abierto, para no pisar lo que se escribe
+  if (!$("admin-modal").classList.contains("open")) loadProducts();
+}, REFRESH_MS);
+
+</script>
+</body>
+</html>
